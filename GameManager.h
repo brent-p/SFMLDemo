@@ -26,6 +26,7 @@ public:
         void drawToScreen();    // end the current frame (internally swaps the front and back buffers)
         void resizeGLScene();
         void setupGl();
+        void clearBuffers();
 };
 #endif
 

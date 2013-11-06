@@ -8,38 +8,16 @@
 #include <cstdlib>
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
-#include "Ply/PlyModel.h"
 #include "gameManager.h"
+#include "Model.h"
+#include "shipModel.h"
 
 using namespace std;
 
-/*
- * 
- */
-GLfloat rotateMenuShip = 0.0f;
-PlyModel* shipModel;
-GameManager* gameManager;
 
-void drawMenuShip()
-{
-	GLfloat scale = 0.08f;
-        glColor3f(1.0f,1.0f,1.0f);
-	rotateMenuShip = rotateMenuShip + .5f;
-	glTranslatef(0.0f, 0.0f, -1.5f);
-	glRotatef(rotateMenuShip,0,1.0f,0.0f);
-	glRotatef(-90.0f,1.0f,0,0);
-	
-	//Set up the correct orientation of the ship
-	glScalef(scale,scale,scale);
-	
-	shipModel->draw();				// Draw the ship model
-	
-	//Reverse Transformations
-	glScalef(1/scale,1/scale,1/scale);
-	glRotatef(-90.0f,1.0f,0,0);
-	glRotatef(-rotateMenuShip,0,1.0f,0.0f);
-	glTranslatef(0.0f,0.0f, 1.5f);
-}
+Model* shipModel;
+GameManager* gameManager;
+ bool running = true;
 
 int main(int argc, char** argv) 
 {
@@ -50,21 +28,20 @@ int main(int argc, char** argv)
         gameManager->createWindow();
         
         // load resources, initialize the OpenGL states
-        shipModel = new PlyModel("./data/ship.ply",false);
+        shipModel = new ShipModel("./data/ship.ply");
 
-        // run the main game loop
-        bool running = true;
+        // run the main game loop       
         while (running)
         {
             // handle events
             running = gameManager->handleEvents();
-
-            // clear the buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glLoadIdentity();        
+            if(!running) break; //exit
             
-            // draw...
-            drawMenuShip();
+            // clear the buffers
+            gameManager->clearBuffers();
+            
+            // Setup all entities to be drawn
+            shipModel->draw();
             
             gameManager->drawToScreen();
         }
