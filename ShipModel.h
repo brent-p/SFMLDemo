@@ -22,6 +22,9 @@ public:
         ShipModel(std::string name);
         //ShipModel();
         void draw();
+        
+        GLfloat getRotateShip();
+        void setRotateShip(GLfloat rotate);
 };
 #endif
 

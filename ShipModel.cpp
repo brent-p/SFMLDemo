@@ -31,7 +31,7 @@ void ShipModel::draw()
 {
     GLfloat scale = 0.08f;
     glColor3f(1.0f,1.0f,1.0f);
-    rotateShip = rotateShip + .5f;
+    //rotateShip = rotateShip + .5f;
     glTranslatef(0.0f, 0.0f, -1.5f);
     glRotatef(rotateShip,0,1.0f,0.0f);
     glRotatef(-90.0f,1.0f,0,0);
@@ -48,6 +48,15 @@ void ShipModel::draw()
     glTranslatef(0.0f,0.0f, 1.5f);
 }
 
+GLfloat ShipModel::getRotateShip()
+{
+    return rotateShip;
+}
 
+void ShipModel::setRotateShip(GLfloat rotate)
+{
+    rotateShip = rotate;
+}
+    
 
 
