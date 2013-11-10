@@ -6,14 +6,14 @@
  */
 
 #include "GameManager.h"
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
+
+ Input* inputs[2];
+
 
 GameManager::GameManager(GLsizei width, GLsizei height)
 {
     windowWidth = width;
     windowHeight = height;
-    
 }
 
 void GameManager::createWindow()
@@ -22,6 +22,8 @@ void GameManager::createWindow()
     window.setVerticalSyncEnabled(true);
     setupGl();
     resizeGLScene();
+    inputs[0] = new Keyboard();
+    inputs[1] = new Gamepad();
 }
 
 bool GameManager::handleEvents()
@@ -31,18 +33,18 @@ bool GameManager::handleEvents()
      {
              if (event.type == sf::Event::Closed)
              {
-                     // end the program
-                     return false;
+                // end the program
+                return false;
              }
              else if (event.type == sf::Event::Resized)
              {
-                     // adjust the viewport when the window is resized
-                     //glViewport(0, 0, event.size.width, event.size.height);
-                 windowWidth = event.size.width;
-                 windowHeight = event.size.height;
-                 resizeGLScene();
+                // adjust the viewport when the window is resized
+                windowWidth = event.size.width;
+                windowHeight = event.size.height;
+                resizeGLScene();
              }
      }
+     getInput();
      return true;
 }
 
@@ -83,10 +85,68 @@ void GameManager::setupGl()
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);                          // Really nice perspective calculations
     glDisable(GL_BLEND);                                                        // Turn blending off
     glEnable(GL_DEPTH_TEST);                                                    // Turn depth testing on
+    
+    lighting = new Lighting();
+    
+    
 }
 
 void GameManager::clearBuffers()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+}
+
+void GameManager::getInput()
+{
+    pressLeft = false;
+    pressRight = false;
+    for(int i = 0; i < 2; i++) // loop through different input devices
+    {
+        if(inputs[i]->getIsConnected())
+        {
+            if(inputs[i]->left())
+            {
+                pressLeft = true;
+            }
+            if(inputs[i]->right())
+            {
+                pressRight = true;
+            }
+        }
+    }
+}
+
+void GameManager::updateModels()
+{
+        if(pressRight)
+        {
+                rotateShip = rotateShip + 2.0f;
+                shipModel->setRotateShip(rotateShip);
+        }
+        else
+        {
+                shipModel->setRotateShip(rotateShip);
+        }
+        
+        if(pressLeft)
+        {
+            rotateShip = rotateShip - 2.0f;
+            shipModel->setRotateShip(rotateShip);
+        }
+        else
+        {
+            shipModel->setRotateShip(rotateShip);
+        }
+}
+
+void GameManager::setupModels()
+{
+    shipModel = new ShipModel("./data/ship.ply");
+    rotateShip = 0;
+}
+
+void GameManager::drawModels()
+{
+    shipModel->draw();
 }

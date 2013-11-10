@@ -11,6 +11,11 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
+#include "Lighting.h"
+#include "Input.h"
+#include "Gamepad.h"
+#include "Keyboard.h"
+#include "shipModel.h"
 
 class GameManager{
 private:
@@ -18,6 +23,11 @@ private:
         sf::Window window;
         GLsizei windowWidth;
         GLsizei windowHeight;
+        Lighting* lighting;
+        ShipModel* shipModel;
+        float rotateShip;
+        bool pressLeft;
+        bool pressRight;
         
 public: 
         GameManager(GLsizei width, GLsizei height);
@@ -27,6 +37,10 @@ public:
         void resizeGLScene();
         void setupGl();
         void clearBuffers();
+        void setupModels();
+        void updateModels();
+        void drawModels();
+        void getInput();
 };
 #endif
 

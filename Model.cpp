@@ -9,7 +9,6 @@
 #include "Model.h"
 #include <string>
 
-//Model::Model()
 Model::Model(std::string name)
 {
     modelName = name;

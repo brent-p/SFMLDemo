@@ -1,5 +1,5 @@
 /* 
- * File:   GameManager.h
+ * File:   ShipModel.cpp
  * Author: Brent Parish
  *
  * Created on November 6, 2013, 7:32 PM
@@ -10,16 +10,6 @@
 #include <string>
 #include <SFML/OpenGL.hpp>
 #include "ShipModel.h"
-//#include "Ply/PlyModel.h"
-
-/*ShipModel::ShipModel()
-{
-}*/
-
-/*void ShipModel::draw()
-{
-    //stuff
-}*/
 
 ShipModel::ShipModel(std::string name): Model(name) 
 {

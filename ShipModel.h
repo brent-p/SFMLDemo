@@ -1,5 +1,5 @@
 /* 
- * File:   GameManager.h
+ * File:   ShipModel.h
  * Author: Brent Parish
  *
  * Created on November 6, 2013, 7:32 PM
@@ -10,7 +10,6 @@
 #define ShipModel_H
 
 #include "Model.h"
-//#include <string>
 
 class ShipModel : public Model
 {
