@@ -18,9 +18,10 @@ private:
         GLfloat rotateShip;
         
 public: 
+        //Overide Methods
         ShipModel(std::string name);
-        //ShipModel();
         void draw();
+        void updateLogic(InputStateController *inputState);
         
         GLfloat getRotateShip();
         void setRotateShip(GLfloat rotate);

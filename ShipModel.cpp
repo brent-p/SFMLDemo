@@ -38,6 +38,19 @@ void ShipModel::draw()
     glTranslatef(0.0f,0.0f, 1.5f);
 }
 
+void ShipModel::updateLogic(InputStateController *inputState)
+{
+    if (inputState->isPressingRight())
+    {
+        rotateShip = rotateShip + 2.0f;
+    }
+    
+    if (inputState->isPressingLeft())
+    {
+        rotateShip = rotateShip - 2.0f;
+    }
+}
+
 GLfloat ShipModel::getRotateShip()
 {
     return rotateShip;

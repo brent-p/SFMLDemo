@@ -7,23 +7,20 @@
 
 #include "GameManager.h"
 
- Input* inputs[2];
-
-
 GameManager::GameManager(GLsizei width, GLsizei height)
 {
     windowWidth = width;
     windowHeight = height;
 }
 
+//Create new window for a specific height and width
 void GameManager::createWindow()
 {
     window.create(sf::VideoMode(windowWidth, windowHeight), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
     window.setVerticalSyncEnabled(true);
     setupGl();
     resizeGLScene();
-    inputs[0] = new Keyboard();
-    inputs[1] = new Gamepad();
+    inputState = new InputStateController();
 }
 
 bool GameManager::handleEvents()
@@ -44,7 +41,7 @@ bool GameManager::handleEvents()
                 resizeGLScene();
              }
      }
-     getInput();
+     inputState->getInput();
      return true;
 }
 
@@ -54,23 +51,24 @@ void GameManager::drawToScreen()
     window.display();
 }
 
+//A resize event has been detected, update the window based on the users actions
 void GameManager::resizeGLScene()
 {
-   if (windowHeight == 0)                                                       // Prevent a divide by zero by
-   {
-        windowHeight = 1;                                                 // Making height equal one
-   }
+    if (windowHeight == 0)                                                       // Prevent a divide by zero by
+    {
+         windowHeight = 1;                                                       // Making height equal one
+    }
 
-        glViewport(0,0,windowWidth,windowHeight);                               // Reset the current viewport
+    glViewport(0,0,windowWidth,windowHeight);                               // Reset the current viewport
 
-        glMatrixMode(GL_PROJECTION);                                            // Select the projection matrix
-        glLoadIdentity();                                                       // Reset the projection matrix
+    glMatrixMode(GL_PROJECTION);                                            // Select the projection matrix
+    glLoadIdentity();                                                       // Reset the projection matrix
 
-        // Calculate the aspect ratio of the window
-        gluPerspective(45.0f,(GLfloat)windowWidth/(GLfloat)windowHeight,0.1f,100.0f);
+    // Calculate the aspect ratio of the window
+    gluPerspective(45.0f,(GLfloat)windowWidth/(GLfloat)windowHeight,0.1f,100.0f);
 
-        glMatrixMode(GL_MODELVIEW);                                             // Select the modelview matrix
-        glLoadIdentity();                                                       // Reset the modelview matrix
+    glMatrixMode(GL_MODELVIEW);                                             // Select the modelview matrix
+    glLoadIdentity();                                                       // Reset the modelview matrix
 }
 
 void GameManager::setupGl()
@@ -88,7 +86,6 @@ void GameManager::setupGl()
     
     lighting = new Lighting();
     
-    
 }
 
 void GameManager::clearBuffers()
@@ -97,56 +94,29 @@ void GameManager::clearBuffers()
     glLoadIdentity();
 }
 
-void GameManager::getInput()
+//Update logic for each model based on the games state.
+void GameManager::updateModels()
 {
-    pressLeft = false;
-    pressRight = false;
-    for(int i = 0; i < 2; i++) // loop through different input devices
+    for(std::list<Model*>::iterator list_iter = model_list.begin(); 
+    list_iter != model_list.end(); list_iter++)
     {
-        if(inputs[i]->getIsConnected())
-        {
-            if(inputs[i]->left())
-            {
-                pressLeft = true;
-            }
-            if(inputs[i]->right())
-            {
-                pressRight = true;
-            }
-        }
+        (*list_iter)->updateLogic(inputState);
     }
 }
 
-void GameManager::updateModels()
-{
-        if(pressRight)
-        {
-                rotateShip = rotateShip + 2.0f;
-                shipModel->setRotateShip(rotateShip);
-        }
-        else
-        {
-                shipModel->setRotateShip(rotateShip);
-        }
-        
-        if(pressLeft)
-        {
-            rotateShip = rotateShip - 2.0f;
-            shipModel->setRotateShip(rotateShip);
-        }
-        else
-        {
-            shipModel->setRotateShip(rotateShip);
-        }
-}
-
+//Setup the model list
 void GameManager::setupModels()
 {
-    shipModel = new ShipModel("./data/ship.ply");
-    rotateShip = 0;
+    ShipModel* shipModel = new ShipModel("./data/ship.ply");
+    model_list.push_back(shipModel);
 }
 
+//Draw all the models
 void GameManager::drawModels()
 {
-    shipModel->draw();
+    for(std::list<Model*>::iterator list_iter = model_list.begin(); 
+    list_iter != model_list.end(); list_iter++)
+    {
+        (*list_iter)->draw();
+    }
 }

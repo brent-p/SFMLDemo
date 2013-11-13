@@ -12,10 +12,12 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include "Lighting.h"
-#include "Input.h"
-#include "Gamepad.h"
-#include "Keyboard.h"
+#include "InputStateController.h"
+#include "Model.h"
 #include "shipModel.h"
+#include <list>
+
+using namespace std;
 
 class GameManager{
 private:
@@ -24,10 +26,8 @@ private:
         GLsizei windowWidth;
         GLsizei windowHeight;
         Lighting* lighting;
-        ShipModel* shipModel;
-        float rotateShip;
-        bool pressLeft;
-        bool pressRight;
+        InputStateController* inputState;
+        list<Model*> model_list;
         
 public: 
         GameManager(GLsizei width, GLsizei height);
